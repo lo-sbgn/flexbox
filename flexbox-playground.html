@@ -1,0 +1,513 @@
+
+<!--
+
+    *******              .,,****,,              
+                *(*//*////@(        *#**//(###((((##%#.        
+              .#((/*,***/*@#      (/*,**/(((//((#((((((&*      
+             /(/**/(*..,.*@#     #,,.,,/(/**/((//////(((&(     
+           ,%#((//*,.**...@#    *.. .**,,*@@&((&*//((####@*    
+          #####((/(*,. .. @#    (  .. ...&@,    %((######@#    
+        ((((/////@@//*,.. @#     /&&&&&&&%*    ((########@#    
+      ,%####(((&@%%,...   @#                 ,#((((#####@@,    
+    .####(((/#@&, #....   @#              .((((((######@@*     
+   /%####(((@@(  .#***,,. @#            *#///////((((@@%.      
+  *(((((((#####((((/*.... . ../       (*. .*//(###%@@#.        
+  *%%%#########((*,**,, .. . .@*    (. ,,//(*,*(@@&*           
+  *##########(//(/*//../... ,.@*  **...,.**/(&@@(.             
+  *%%%####(((#((((/,,(/.**.,**@* (,**,*,*/,/(/(#####(((((&(    
+   ./((((((((((((#&(#*,//.@&((/./,,///**/*(/*/(((####%###&&.   
+                  %(**((**@#   ,/**//((//(//((//(#######%@&.   
+                  #//#(/*(@#   /(////((((/((((#(((#######&&.   
+                   .*******.     ,************************.
+
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Flexbox playground</title>
+    <meta name="description" content="A flexbox playground by Laurent SBEGHEN">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --active: #29a297;
+            --notactive: #b13b5b;
+        }
+        
+        body {
+            background: #1f1c1d;
+            max-width: 100vw;
+            padding: 10px;
+        }
+        
+        * {
+            font-family: 'Nanum Gothic', sans-serif;
+            box-sizing: border-box;
+            /*useful for avoid calc(x% - ...) in flex basis.  if box sizing is content-box (default) => paddings + margins + borders.*/
+        }
+        
+        *:not(input) {
+            font-size: 13px;
+            color: white;
+        }
+        
+        *:focus {
+            outline: none;
+        }
+        
+        h1 {
+            font-size: 30px;
+            margin: auto;
+            width: fit-content;
+        }
+        
+        h2 {
+            font-size: 20px;
+        }
+        
+        h3 {
+            font-size: 12px;
+        }
+        
+        .container {
+            background: rgb(14, 13, 13);
+            margin-top: 50px;
+            border: 5px solid #29a297;
+        }
+        
+        .flex-item {
+            padding: 50px;
+            border: 5px solid white;
+            color: black;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            border-radius: 20px;
+            margin: 5px;
+        }
+        
+        .numberitem {
+            position: absolute;
+            font-size: 66px;
+            font-weight: bold;
+            top: 5px;
+            right: 5px;
+            color: rgba(255, 255, 255, .5);
+        }
+        
+        .flex-item p,
+        .flex-item span {
+            color: black
+        }
+        
+        button {
+            background: var(--notactive);
+            color: white;
+            padding: 5px;
+            border: none;
+            box-shadow: 1px 1px 2px gray;
+            cursor: pointer;
+            margin: 3px;
+            border-radius: 3px;
+            text-decoration: line-through;
+        }
+        
+        button:hover {
+            color: white;
+            box-shadow: none;
+        }
+        
+        input {
+            width: 30px;
+            height: 20px;
+            border-radius: 10px;
+            margin: 0 5px;
+            transition: all .5s ease-in-out;
+            box-shadow: none;
+            border: none;
+            text-align: center;
+            padding-bottom: 4px;
+            margin-bottom: 5px;
+            font-size: 10px;
+            border: 2px solid rgb(109, 4, 109);
+        }
+        
+        input:focus {
+            width: 100px;
+            font-size: 14px;
+        }
+        
+        label {
+            margin: 0 5px;
+            font-weight: bold;
+        }
+        
+        .a {
+            background: var(--active);
+            text-decoration: unset;
+        }
+        
+        .group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .typeofdisplay {
+            background: black;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+        }
+        
+        #collapse,
+        #decollapse {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: unset;
+            width: 70px;
+            height: 70px;
+            font-size: 65px;
+            text-decoration: unset;
+            box-shadow: unset;
+            z-index: 99;
+        }
+        
+        .init {
+            font-size: 60px;
+            text-align: center;
+        }
+        
+        pre.pre {
+            font-size: 30px;
+            text-align: center;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 180px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            font-weight: normal;
+        }
+        
+        .tooltip.inp .tooltiptext {
+            width: fit-content;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+        
+        textarea.codepreview1,
+        textarea.codepreview2,
+        textarea.codepreview3 {
+            background: #141414;
+            margin-top: 20px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            padding: 10px;
+            color: #15e037;
+        }
+        
+        .codepreview {
+            display: flex;
+            width: 100%;
+            justify-content: space-evenly;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            * {
+                /*todo*/
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="group">
+        <h1>FlexBox playground</h1>
+        <p><a href="https://sbeghen.fr">by Laurent Sbeghen</a></p>
+    </div>
+    <h2>Container properties : </h2>
+    <div class="group">
+        <button id="decollapse">+</button>
+        <label for="nbItem">Quantity of item(s) :</label>
+        <input id="nbItem" onchange="setItem()" value="0">
+        <span> ||</span>
+
+        <label for="cwidth">Width :</label>
+        <input id="cwidth" onchange="flexItemProp(this.id, 'width', '.container')" value="auto">
+        <span> ||</span>
+        <label for="cheight">Height :</label>
+        <input id="cheight" onchange="flexItemProp(this.id,'height', '.container')" value="auto">
+
+    </div>
+    <div class="group">
+        <h3>Display : </h3>
+        <button id="d-block" onclick="flex('display','block',this.id, this.className)" class="display a">Block</button>
+        <button id="d-flex" onclick="flex('display','flex',this.id, this.className)" class="display">Flex</button>
+    </div>
+
+    <div class="typeofdisplay">
+        <button id="collapse">-</button>
+
+        <div class="group">
+            <h3>Flex-direction : </h3>
+            <button id="fl3" onclick="flex('flex-direction','column',this.id, this.className)" class="direction">Column</button>
+            <button id="fl4" onclick="flex('flex-direction','row',this.id, this.className)" class="direction a">Row</button>
+            <button id="fl5" onclick="flex('flex-direction','column-reverse',this.id, this.className)" class="direction">Column reverse</button>
+            <button id="fl6" onclick="flex('flex-direction','row-reverse',this.id, this.className)" class="direction">
+                Row reverse</button>
+        </div>
+        <div class="group">
+            <h3>Flex-wrap : </h3>
+            <button id="fl8" onclick="flex('flex-wrap','nowrap',this.id, this.className)" class="wrap a">Nowrap</button>
+            <button id="fl7" onclick="flex('flex-wrap','wrap',this.id, this.className)" class="wrap">Wrap</button>
+            <button id="fl7b" onclick="flex('flex-wrap','wrap-reverse',this.id, this.className)" class="wrap">Wrap-reverse</button>
+        </div>
+        <div class="group">
+            <h3>Justify-content : </h3>
+            <button id="fl9" onclick="flex('justify-content','flex-start',this.id, this.className)" class="just a">Flex-start</button>
+            <button id="fl10" onclick="flex('justify-content','flex-end',this.id, this.className)" class="just">Flex-end</button>
+            <button id="fl11" onclick="flex('justify-content','center',this.id, this.className)" class="just">Center</button>
+            <button id="fl12" onclick="flex('justify-content','space-around',this.id, this.className)" class="just">Space-around</button>
+            <button id="fl13" onclick="flex('justify-content','space-evenly',this.id, this.className)" class="just">Space evenly</button>
+            <button id="fl14" onclick="flex('justify-content','space-between',this.id, this.className)" class="just">Space between</button>
+
+        </div>
+        <div class="group">
+            <h3>Align-items : </h3>
+            <button id="fl15" onclick="flex('align-items','stretch',this.id, this.className)" class="align-i a">Stretch</button>
+            <button id="fl16" onclick="flex('align-items','flex-start',this.id, this.className)" class="align-i">Flex-start</button>
+            <button id="fl17" onclick="flex('align-items','flex-end',this.id, this.className)" class="align-i">Flex-end</button>
+            <button id="fl18" onclick="flex('align-items','center',this.id, this.className)" class="align-i">Center</button>
+            <button id="fl19" onclick="flex('align-items','baseline',this.id, this.className)" class="align-i">Baseline</button>
+        </div>
+
+        <div class="group">
+            <h3>Align-content : </h3>
+            <button id="fl20" onclick="flex('align-content','flex-start',this.id, this.className)" class="align-c a">Flex-start</button>
+            <button id="fl21" onclick="flex('align-content','flex-end',this.id, this.className)" class="align-c">Flex-end</button>
+            <button id="fl22" onclick="flex('align-content','center',this.id, this.className)" class="align-c">Center</button>
+            <button id="fl23" onclick="flex('align-content','space-around',this.id, this.className)" class="align-c">Space-around</button>
+            <button id="fl24" onclick="flex('align-content','space-between',this.id, this.className)" class="align-c">Space-between</button>
+            <button id="fl25" onclick="flex('align-content','stretch',this.id, this.className)" class="align-c">Strech</button>
+
+        </div>
+        <h2>Flexibles items properties : </h2>
+        <label for="flexgrow">Flex grow :</label>
+        <input id="flexgrow" onchange="flexItemProp(this.id, 'flex-grow', '.flex-item',false)" value="0">
+
+        <label for="flexshrink">Flex shrink :</label>
+        <input id="flexshrink" onchange="flexItemProp(this.id, 'flex-shrink', '.flex-item',false)" value="1">
+
+        <label for="flexbasis">Flex basis :</label>
+        <input id="flexbasis" onchange="flexItemProp(this.id, 'flex-basis', '.flex-item',false)" value="auto">
+
+        <label for="item-width">Width:</label>
+        <input id="item-width" onchange="flexItemProp(this.id, 'width', '.flex-item',false)" value="auto">
+
+        <label for="item-height">Height:</label>
+        <input id="item-height" onchange="flexItemProp(this.id, 'height', '.flex-item',false)" value="auto">
+        <b><i>
+                <p>NOTE : Items individuals properties can be defined from inputs in the box : (flex-grow,flex-shrink,flex-basis, order, align-self, width, height)</p>
+            </i></b>
+    </div>
+
+    <div class=" container">
+        <p class="init">CONTAINER</p>
+        <pre class="pre">display:block<br>:(</pre>
+    </div>
+
+    <div class="div codepreview">
+        <textarea class="codepreview1" name="codepreview1" cols="60" rows="9"></textarea>
+        <textarea class="codepreview2" name="codepreview2" cols="60" rows="9"></textarea>
+        <textarea class="codepreview3" name="codepreview3" cols="60" rows="9"></textarea>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        var active = ["#29a297", "unset"]
+        var notactive = ["#b13b5b", "line-through"];
+
+        $('#d-flex').click(function() {
+            $('.typeofdisplay').slideDown();
+            $('pre.pre').html('display:flex :-)');
+        });
+
+        $('#d-block').click(function() {
+            $('.typeofdisplay').slideUp();
+            $('#decollapse').hide();
+            $('pre.pre').html('display:block;');
+        });
+
+        $('.typeofdisplay , #decollapse').hide();
+
+        $('input').focus(function() {
+            $(this).val('');
+        });
+
+        $('#collapse').click(function() {
+            $('.typeofdisplay').slideUp();
+            $('#decollapse').slideDown();
+        });
+
+        $('#decollapse').click(function() {
+            $('.typeofdisplay').slideDown();
+            $('#decollapse').slideUp();
+        });
+
+        function getSize() {
+            var count = $('.flex-item').length;
+            var c = count + 1;
+
+            var clicked = 0;
+            for (var i = 0; i < c; i++) {
+                var ow = $('#flex-item' + i).outerWidth();
+                var w = $('#flex-item' + i).width();
+                var h = $('#flex-item' + i).height();
+                var oh = $('#flex-item' + i).outerHeight();
+                $('span#span' + i).html('outerWidth :' + ow + '<br> Width :' + w + '<hr>outerHeight :' + oh + '<br>Height :' + h + '<hr><b>Inputs : : </b>flex-grow, flex-shrink, flex-basis, order, align-self, width, height');
+            }
+        };
+
+        var setItem = function() {
+            $('.container').empty();
+            var n = $('#nbItem').val();
+            var c = 0;
+            for (var i = 0; i < n; i++) {
+                c++;
+                var r = Math.floor(Math.random() * 256);
+                var v = Math.floor(Math.random() * 256);
+                var b = Math.floor(Math.random() * 256);
+                var ran = Math.floor(Math.random() * 128);
+                var img = 275 + Math.floor(Math.random() * 200);
+
+                $('.container').append(`
+                    <div class="flex-item" id="flex-item${c}" style="background-image: url(https://picsum.photos/${img}/${img}), linear-gradient(to bottom right, rgb(${r},${v},${b}), rgb(${ran},0,${ran}));background-blend-mode: multiply;background-size:cover;background-position: left bottom;">
+                        <div class="numberitem">${c}</div>
+                        <div class="tooltip inp"> 
+                            <input id="selfgrow${c}" onchange="flexItemProp(this.id, 'flex-grow', 'this.id',${c})" value="0">
+                            <span class="tooltiptext">Flex-grow</span>
+                        </div>
+                        <div class="tooltip inp"> 
+                        <input id="selfshrink${c}" onchange="flexItemProp(this.id, 'flex-shrink', 'this.id',${c})" value="1">
+                        <span class="tooltiptext">Flex-shrink</span>
+                        </div>
+
+                        <div class="tooltip inp"> 
+                            <input id="selfbasis${c}" onchange="flexItemProp(this.id, 'flex-basis', 'this.id',${c})" value="auto">
+                            <span class="tooltiptext">Flex-basis</span>
+                        </div>
+
+                        <div class="tooltip inp"> 
+                            <input id="order${c}" onchange="flexItemProp(this.id, 'order', 'this.id',${c})" value="0" style="background:palegreen">
+                            <span class="tooltiptext">Order</span>
+                        </div>
+
+                        <div class="tooltip inp"> 
+                            <input id="selfalign${c}" onchange="flexItemProp(this.id, 'align-self', 'this.id',${c})" value="auto">
+                            <span class="tooltiptext">Align self</span>
+                        </div>
+
+                        <div class="tooltip inp"> 
+                            <input id="selfwidth${c}" onchange="flexItemProp(this.id, 'width', 'this.id',${c})" value="auto">
+                            <span class="tooltiptext">Width</span>
+                        </div>
+
+                        <div class="tooltip inp"> 
+                            <input id="selfheight${c}" onchange="flexItemProp(this.id, 'height', 'this.id',${c})" value="auto">
+                            <span class="tooltiptext">Height</span>
+                        </div>
+
+                        <div class="tooltip">&nbsp;&nbsp;&nbsp;?<span id="span${c}" class="tooltiptext"></span></div>
+                    </div>
+				`);
+            };
+
+            $('input').focus(function() {
+                $(this).val('');
+            });
+            getSize();
+        }
+
+        var flex = function(property, value, hisid, hisclass) {
+            $('.container').css(property, value);
+            $('.' + hisclass).removeClass('a');
+            $('.' + hisclass).css({
+                'background': notactive[0],
+                'text-decoration': notactive[1]
+            });
+            $('#' + hisid).css({
+                'background': active[0],
+                'text-decoration': active[1]
+            });
+
+            var html = ["/*container flex */ \n\n.container \{"];
+            var styleProps = $('.container').css([
+                "display", "flex-direction", "flex-wrap", "justify-content", "align-items", "align-content"
+            ]);
+            $.each(styleProps, function(prop, value) {
+                html.push("&nbsp;&nbsp;&nbsp;&nbsp;" + prop + ": " + value + ";");
+            });
+            html.push("}\n");
+            $("textarea.codepreview1").html(html.join("\n"));
+
+            getSize();
+        }
+        var flexItemProp = function(hishid, property, target, item) {
+            if (!item) {
+                v = $('#' + hishid).val();
+                $(target).css(property, v);
+                var html = ["/*proporties for .flex-item */\n\n.flex-item \{"];
+                var styleProps = $('.flex-item').css([
+                    "flex-grow", "flex-shrink", "flex-basis"
+                ]);
+                $.each(styleProps, function(prop, value) {
+                    html.push("&nbsp;&nbsp;&nbsp;&nbsp;" + prop + ": " + value + ";");
+                });
+                html.push("}\n");
+                $("textarea.codepreview2").html(html.join("\n"));
+
+            } else {
+                v = $('#' + hishid).val();
+                $('#flex-item' + item).css(property, v);
+
+                var html = ["/*propoeries for #flex-item" + item + " */\n\n#flex-item" + item + "\{"];
+                var styleProps = $('#flex-item' + item).css([
+                    "flex-grow", "flex-shrink", "flex-basis", "order", "align-self"
+                ]);
+                $.each(styleProps, function(prop, value) {
+                    html.push("&nbsp;&nbsp;&nbsp;&nbsp;" + prop + ": " + value + ";");
+                });
+                html.push("}\n");
+                $("textarea.codepreview3").html(html.join("\n"));
+            }
+            getSize();
+        }
+        getSize();
+    </script>
+
+
+
+</body>
+
+</html>
